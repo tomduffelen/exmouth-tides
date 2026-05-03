@@ -25,20 +25,26 @@
       --deep-sea: #063955;
       --coral-red: #EF4A35;
       --warm-cream: #FFF4D8;
-      --soft-cream: #FFF8EA;
+      --soft-cream: #FDFAF2;
       --dark-navy: #032B42;
-      --wave-blue: #0a5a82;
-      --muted: #8aaaba;
+      --muted: #7a9aaa;
+      --border: rgba(6, 57, 85, 0.12);
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     html { scroll-behavior: smooth; }
 
     body {
       font-family: 'DM Sans', sans-serif;
-      background: var(--deep-sea);
-      color: var(--warm-cream);
+      background-color: var(--soft-cream);
+      background-image: repeating-linear-gradient(
+        -45deg,
+        transparent,
+        transparent 28px,
+        rgba(6, 57, 85, 0.022) 28px,
+        rgba(6, 57, 85, 0.022) 29px
+      );
+      color: var(--deep-sea);
       min-height: 100dvh;
       display: flex;
       flex-direction: column;
@@ -47,24 +53,21 @@
     /* ── HEADER ── */
     header {
       background: var(--dark-navy);
-      padding: 1rem 1.25rem 0.875rem;
+      padding: 0.875rem 1.25rem;
       display: flex;
       align-items: center;
       gap: 0.75rem;
-      border-bottom: 2px solid var(--coral-red);
+      border-bottom: 3px solid var(--coral-red);
       position: sticky;
       top: 0;
       z-index: 100;
     }
 
-    header img {
-      height: 40px;
-      width: auto;
-    }
+    header img { height: 38px; width: auto; }
 
     .header-text h1 {
       font-family: 'Playfair Display', serif;
-      font-size: 1.2rem;
+      font-size: 1.15rem;
       font-weight: 700;
       line-height: 1.1;
       color: var(--warm-cream);
@@ -72,51 +75,50 @@
     }
 
     .header-text span {
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       font-weight: 400;
-      color: var(--muted);
-      letter-spacing: 0.08em;
+      color: rgba(255, 255, 255, 0.4);
+      letter-spacing: 0.1em;
       text-transform: uppercase;
     }
 
     /* ── MAIN ── */
-    main {
-      flex: 1;
-      padding: 0 0 2rem;
-    }
+    main { flex: 1; padding-bottom: 2.5rem; }
 
-    /* ── HERO TODAY ── */
+    /* ── HERO ── */
     .hero {
-      background: linear-gradient(160deg, var(--dark-navy) 0%, var(--deep-sea) 100%);
-      padding: 1.5rem 1.25rem 2rem;
-      position: relative;
-      overflow: hidden;
+      background: var(--warm-cream);
+      border-bottom: 1px solid rgba(6, 57, 85, 0.1);
+      padding-bottom: 1.75rem;
     }
 
-    .hero::before {
-      content: '';
-      position: absolute;
-      bottom: -1px;
-      left: 0; right: 0;
-      height: 32px;
-      background: var(--deep-sea);
-      clip-path: ellipse(55% 100% at 50% 100%);
+    /* Beach-hut stripe bar */
+    .hero-stripe {
+      height: 9px;
+      background: repeating-linear-gradient(
+        90deg,
+        var(--coral-red) 0, var(--coral-red) 22px,
+        var(--dark-navy) 22px, var(--dark-navy) 44px
+      );
+      margin-bottom: 1.5rem;
     }
+
+    .hero-inner { padding: 0 1.25rem; }
 
     .hero-date {
       font-family: 'Playfair Display', serif;
-      font-size: 1.5rem;
+      font-size: 1.45rem;
       font-weight: 700;
-      margin-bottom: 0.25rem;
-      color: var(--warm-cream);
+      color: var(--deep-sea);
+      margin-bottom: 0.2rem;
     }
 
     .hero-location {
-      font-size: 0.72rem;
+      font-size: 0.68rem;
       color: var(--muted);
       letter-spacing: 0.1em;
       text-transform: uppercase;
-      margin-bottom: 1.25rem;
+      margin-bottom: 1.1rem;
     }
 
     /* tide state pill */
@@ -124,145 +126,157 @@
       display: inline-flex;
       align-items: center;
       gap: 0.4rem;
-      background: rgba(239, 74, 53, 0.15);
-      border: 1px solid rgba(239, 74, 53, 0.4);
-      color: #ff8070;
+      background: rgba(6, 57, 85, 0.07);
+      border: 1px solid rgba(6, 57, 85, 0.18);
+      color: var(--deep-sea);
       border-radius: 2rem;
       padding: 0.3rem 0.85rem;
-      font-size: 0.78rem;
+      font-size: 0.76rem;
       font-weight: 500;
       letter-spacing: 0.03em;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.25rem;
     }
 
     .tide-state.incoming {
-      background: rgba(10, 90, 130, 0.25);
-      border-color: rgba(100, 180, 220, 0.4);
-      color: #7fd0f0;
+      background: rgba(10, 90, 130, 0.08);
+      border-color: rgba(10, 90, 130, 0.25);
+      color: #0a5a82;
     }
 
-    .tide-state svg {
-      width: 14px; height: 14px;
-      fill: currentColor;
-    }
+    .tide-state svg { width: 13px; height: 13px; fill: currentColor; }
 
-    /* today tide cards grid */
+    /* ── TIDE GRID — full-width vertical list ── */
     .tide-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-      gap: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
     }
 
+    /* tide row card */
     .tide-card {
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 12px;
-      padding: 1rem 1rem 0.875rem;
-      position: relative;
-      transition: transform 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-left: 5px solid rgba(6, 57, 85, 0.2);
+      border-radius: 0 10px 10px 0;
+      padding: 0.8rem 1.1rem 0.8rem 1rem;
     }
 
     .tide-card.next-tide {
-      border-color: rgba(239, 74, 53, 0.5);
-      background: rgba(239, 74, 53, 0.08);
+      border-left-color: var(--coral-red);
+      background: #fffbfa;
     }
 
-    .tide-card .badge {
-      font-size: 0.6rem;
-      font-weight: 600;
-      letter-spacing: 0.12em;
+    .card-left { display: flex; flex-direction: column; gap: 0.1rem; }
+
+    .card-badge {
+      font-size: 0.57rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
       text-transform: uppercase;
       color: var(--coral-red);
-      margin-bottom: 0.4rem;
+      min-height: 1em;
     }
 
-    .tide-card.next-tide .badge { color: #ff8070; }
-
-    .tide-card .type {
+    .card-type {
       font-family: 'Playfair Display', serif;
-      font-size: 1.05rem;
+      font-size: 1rem;
       font-weight: 600;
-      color: var(--warm-cream);
-      margin-bottom: 0.2rem;
+      color: var(--deep-sea);
+      line-height: 1.2;
     }
 
-    .tide-card .time {
-      font-size: 1.55rem;
-      font-weight: 600;
-      color: var(--warm-cream);
-      letter-spacing: -0.02em;
-      line-height: 1.1;
-      margin-bottom: 0.3rem;
-    }
-
-    .tide-card .height {
-      font-size: 0.8rem;
+    .card-day {
+      font-size: 0.66rem;
       color: var(--muted);
-      font-weight: 400;
+      letter-spacing: 0.04em;
+      margin-top: 0.15rem;
     }
 
-    .tide-card .height strong {
-      color: var(--warm-cream);
-      font-weight: 600;
+    .card-right { text-align: right; flex-shrink: 0; }
+
+    .card-time {
+      font-size: 1.85rem;
+      font-weight: 700;
+      color: var(--deep-sea);
+      letter-spacing: -0.03em;
+      line-height: 1;
+    }
+
+    .card-ht {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-top: 0.25rem;
+      letter-spacing: 0.02em;
     }
 
     /* ── UPCOMING SECTION ── */
-    .upcoming {
-      padding: 1.75rem 1.25rem 0;
+    .upcoming { padding: 1.75rem 1.25rem 0; }
+
+    .section-rule {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .section-rule::before, .section-rule::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
     }
 
     .upcoming-title {
       font-family: 'Playfair Display', serif;
-      font-size: 1.05rem;
+      font-size: 0.88rem;
       font-weight: 600;
-      color: var(--warm-cream);
-      margin-bottom: 1rem;
-      opacity: 0.85;
+      color: var(--muted);
+      white-space: nowrap;
+      letter-spacing: 0.05em;
     }
 
-    /* accordion day */
+    /* ── ACCORDION ── */
     .day-accordion {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 12px;
-      margin-bottom: 0.625rem;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 0.5rem;
       overflow: hidden;
-      transition: border-color 0.2s;
+      transition: border-color 0.2s, box-shadow 0.2s;
     }
 
     .day-accordion.open {
-      border-color: rgba(255, 255, 255, 0.18);
+      border-color: rgba(6, 57, 85, 0.22);
+      box-shadow: 0 2px 12px rgba(6, 57, 85, 0.06);
     }
 
     .day-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0.9rem 1.1rem;
+      padding: 0.875rem 1.1rem;
       cursor: pointer;
       user-select: none;
       -webkit-tap-highlight-color: transparent;
     }
 
-    .day-header:active { opacity: 0.75; }
-
-    .day-header-left { display: flex; flex-direction: column; gap: 0.15rem; }
+    .day-header:active { opacity: 0.7; }
+    .day-header-left { display: flex; flex-direction: column; gap: 0.1rem; }
 
     .day-name {
       font-family: 'Playfair Display', serif;
       font-size: 1rem;
       font-weight: 600;
-      color: var(--warm-cream);
+      color: var(--deep-sea);
     }
 
-    .day-range {
-      font-size: 0.7rem;
-      color: var(--muted);
-      letter-spacing: 0.04em;
-    }
+    .day-range { font-size: 0.68rem; color: var(--muted); letter-spacing: 0.05em; }
 
     .day-chevron {
-      width: 20px; height: 20px;
+      width: 18px; height: 18px;
       color: var(--muted);
       transition: transform 0.25s;
       flex-shrink: 0;
@@ -277,47 +291,39 @@
     }
 
     .day-accordion.open .day-body { grid-template-rows: 1fr; }
-
-    .day-body-inner {
-      overflow: hidden;
-      padding: 0 1rem;
-    }
-
-    .day-accordion.open .day-body-inner { padding-bottom: 1rem; }
+    .day-body-inner { overflow: hidden; }
+    .day-body-pad { padding: 0 1rem 1rem; }
 
     .day-tides {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
-      gap: 0.6rem;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      gap: 0.5rem;
     }
 
     .mini-tide {
-      background: rgba(255, 255, 255, 0.05);
+      background: var(--soft-cream);
+      border: 1px solid var(--border);
       border-radius: 8px;
-      padding: 0.65rem 0.75rem;
+      padding: 0.6rem 0.7rem;
     }
 
-    .mini-tide .type {
-      font-size: 0.62rem;
-      font-weight: 600;
-      letter-spacing: 0.1em;
+    .mini-type {
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
       color: var(--coral-red);
       margin-bottom: 0.2rem;
     }
 
-    .mini-tide .time {
-      font-size: 1.1rem;
+    .mini-time {
+      font-size: 1.05rem;
       font-weight: 600;
-      color: var(--warm-cream);
+      color: var(--deep-sea);
       letter-spacing: -0.01em;
     }
 
-    .mini-tide .height {
-      font-size: 0.72rem;
-      color: var(--muted);
-      margin-top: 0.15rem;
-    }
+    .mini-ht { font-size: 0.68rem; color: var(--muted); margin-top: 0.1rem; }
 
     /* ── LOADING / ERROR ── */
     .status-box {
@@ -331,8 +337,8 @@
     }
 
     .spinner {
-      width: 36px; height: 36px;
-      border: 3px solid rgba(255,255,255,0.1);
+      width: 32px; height: 32px;
+      border: 3px solid rgba(6, 57, 85, 0.1);
       border-top-color: var(--coral-red);
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
@@ -340,40 +346,33 @@
 
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    .status-box p {
-      font-size: 0.85rem;
-      color: var(--muted);
-    }
-
-    .error-msg {
-      color: #ff8070;
-      font-size: 0.85rem;
-    }
+    .status-box p { font-size: 0.85rem; color: var(--muted); }
+    .error-msg { color: var(--coral-red); font-size: 0.85rem; }
 
     /* ── FOOTER ── */
     footer {
       text-align: center;
-      padding: 1.25rem;
-      font-size: 0.68rem;
+      padding: 1.5rem 1.25rem;
+      font-size: 0.67rem;
       color: var(--muted);
-      opacity: 0.6;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.05em;
+      border-top: 1px solid var(--border);
     }
 
     /* ── REFRESH BTN ── */
     .refresh-btn {
       background: none;
-      border: 1px solid rgba(255,255,255,0.15);
-      color: var(--muted);
+      border: 1px solid var(--border);
+      color: var(--deep-sea);
       border-radius: 6px;
-      padding: 0.4rem 0.9rem;
+      padding: 0.4rem 1rem;
       font-family: 'DM Sans', sans-serif;
       font-size: 0.75rem;
       cursor: pointer;
       margin-top: 0.5rem;
       transition: border-color 0.2s, color 0.2s;
     }
-    .refresh-btn:hover { border-color: var(--coral-red); color: var(--warm-cream); }
+    .refresh-btn:hover { border-color: var(--coral-red); color: var(--coral-red); }
   </style>
 </head>
 <body>
@@ -387,9 +386,9 @@
 </header>
 
 <main id="app">
-  <div class="status-box" id="loading">
+  <div class="status-box">
     <div class="spinner"></div>
-    <p>Fetching today's tides&hellip;</p>
+    <p>Fetching tide times&hellip;</p>
   </div>
 </main>
 
@@ -400,21 +399,16 @@ const API = 'https://www.worldtides.info/api/v3?extremes&lat=50.6167&lon=-3.4167
 const CACHE_KEY = 'et-tides';
 const CACHE_TTL = 12 * 60 * 60 * 1000;
 
-// ── helpers ──────────────────────────────────────────────────
-function fmt(unixSec, opts) {
-  return new Date(unixSec * 1000).toLocaleTimeString('en-GB', opts || { hour: '2-digit', minute: '2-digit', hour12: false });
+function fmt(sec) {
+  return new Date(sec * 1000).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
 }
 
-function fmtDate(unixSec) {
-  return new Date(unixSec * 1000).toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' });
+function fmtShort(sec) {
+  return new Date(sec * 1000).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
 }
 
-function fmtShortDate(unixSec) {
-  return new Date(unixSec * 1000).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
-}
-
-function dayKey(unixSec) {
-  const d = new Date(unixSec * 1000);
+function dayKey(sec) {
+  const d = new Date(sec * 1000);
   return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
 }
 
@@ -423,9 +417,8 @@ function todayKey() {
   return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
 }
 
-function h(m) { return `${parseFloat(m).toFixed(2)}m`; }
+function ht(m) { return `${parseFloat(m).toFixed(2)} m`; }
 
-// ── tide state ────────────────────────────────────────────────
 function getTideState(extremes) {
   const now = Date.now() / 1000;
   let prev = null, next = null;
@@ -434,69 +427,74 @@ function getTideState(extremes) {
     else if (!next) next = e;
   }
   if (!prev || !next) return null;
-  const rising = next.type === 'High';
-  return { rising, prev, next };
+  return { rising: next.type === 'High' };
 }
 
-// ── render ────────────────────────────────────────────────────
 function render(extremes) {
+  const now = Date.now() / 1000;
   const today = todayKey();
+
+  // Next 4 upcoming tides from this moment
+  const upcoming = extremes.filter(e => e.dt > now).slice(0, 4);
+
+  // Tide direction state
+  const state = getTideState(extremes);
+
+  // Accordion: next 3 non-today calendar days, full day of tides each
   const grouped = {};
   for (const e of extremes) {
     const k = dayKey(e.dt);
+    if (k === today) continue;
     if (!grouped[k]) grouped[k] = [];
     grouped[k].push(e);
   }
-
-  const keys = Object.keys(grouped);
-  const todayTides = grouped[today] || [];
-  const futureDays = keys.filter(k => k !== today);
-
-  const state = getTideState(extremes);
-  const now = Date.now() / 1000;
-
-  // next tide from now
-  const nextTide = extremes.find(e => e.dt > now);
+  const futureDays = Object.keys(grouped).slice(0, 3);
 
   let statePill = '';
-  if (state) {
+  if (state !== null) {
     const arrow = state.rising
       ? `<svg viewBox="0 0 24 24"><path d="M4 20l16-8L4 4v6l8 2-8 2v6z"/></svg>`
       : `<svg viewBox="0 0 24 24"><path d="M20 4L4 12l16 8v-6l-8-2 8-2V4z"/></svg>`;
-    const label = state.rising ? 'Tide coming in' : 'Tide going out';
-    statePill = `<div class="tide-state ${state.rising ? 'incoming' : ''}">${arrow}${label}</div>`;
+    statePill = `<div class="tide-state ${state.rising ? 'incoming' : ''}">
+      ${arrow}${state.rising ? 'Tide coming in' : 'Tide going out'}
+    </div>`;
   }
 
-  const todayCards = todayTides.map(e => {
-    const isNext = nextTide && e.dt === nextTide.dt;
+  const upcomingCards = upcoming.map((e, i) => {
+    const isNext = i === 0;
+    const isToday = dayKey(e.dt) === today;
+    const dayLabel = isToday
+      ? ''
+      : new Date(e.dt * 1000).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
     return `
       <div class="tide-card ${isNext ? 'next-tide' : ''}">
-        ${isNext ? '<div class="badge">&#9654; Next</div>' : '<div class="badge">&nbsp;</div>'}
-        <div class="type">${e.type === 'High' ? 'High Tide' : 'Low Tide'}</div>
-        <div class="time">${fmt(e.dt)}</div>
-        <div class="height">Height: <strong>${h(e.height)}</strong></div>
+        <div class="card-left">
+          <span class="card-badge">${isNext ? '&#9654;&nbsp;Next tide' : ''}</span>
+          <div class="card-type">${e.type === 'High' ? 'High Tide' : 'Low Tide'}</div>
+          ${dayLabel ? `<div class="card-day">${dayLabel}</div>` : ''}
+        </div>
+        <div class="card-right">
+          <div class="card-time">${fmt(e.dt)}</div>
+          <div class="card-ht">${ht(e.height)}</div>
+        </div>
       </div>`;
   }).join('');
 
-  const futureHTML = futureDays.slice(0, 3).map((k, i) => {
+  const futureHTML = futureDays.map((k, i) => {
     const day = grouped[k];
     const dt0 = day[0].dt;
     const miniCards = day.map(e => `
       <div class="mini-tide">
-        <div class="type">${e.type === 'High' ? 'High' : 'Low'}</div>
-        <div class="time">${fmt(e.dt)}</div>
-        <div class="height">${h(e.height)}</div>
+        <div class="mini-type">${e.type === 'High' ? 'High' : 'Low'}</div>
+        <div class="mini-time">${fmt(e.dt)}</div>
+        <div class="mini-ht">${ht(e.height)}</div>
       </div>`).join('');
-
-    const dtLast = day[day.length - 1].dt;
-    const rangeStr = `${fmtShortDate(dt0)}`;
-
     return `
       <div class="day-accordion" id="day-${i}">
         <div class="day-header" onclick="toggleDay('day-${i}')">
           <div class="day-header-left">
-            <span class="day-name">${new Date(dt0*1000).toLocaleDateString('en-GB',{weekday:'long'})}</span>
-            <span class="day-range">${rangeStr}</span>
+            <span class="day-name">${new Date(dt0 * 1000).toLocaleDateString('en-GB', { weekday: 'long' })}</span>
+            <span class="day-range">${fmtShort(dt0)}</span>
           </div>
           <svg class="day-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <polyline points="6 9 12 15 18 9"/>
@@ -504,7 +502,9 @@ function render(extremes) {
         </div>
         <div class="day-body">
           <div class="day-body-inner">
-            <div class="day-tides">${miniCards}</div>
+            <div class="day-body-pad">
+              <div class="day-tides">${miniCards}</div>
+            </div>
           </div>
         </div>
       </div>`;
@@ -512,32 +512,35 @@ function render(extremes) {
 
   document.getElementById('app').innerHTML = `
     <div class="hero">
-      <div class="hero-date">${new Date().toLocaleDateString('en-GB',{weekday:'long', day:'numeric', month:'long'})}</div>
-      <div class="hero-location">Exmouth Dock &bull; Devon</div>
-      ${statePill}
-      <div class="tide-grid">${todayCards || '<p style="color:var(--muted);font-size:.85rem">No tides found for today.</p>'}</div>
+      <div class="hero-stripe"></div>
+      <div class="hero-inner">
+        <div class="hero-date">${new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' })}</div>
+        <div class="hero-location">Exmouth Dock &bull; Devon</div>
+        ${statePill}
+        <div class="tide-grid">${upcoming.length
+          ? upcomingCards
+          : '<p style="color:var(--muted);font-size:.85rem">No upcoming tides found.</p>'
+        }</div>
+      </div>
     </div>
     <div class="upcoming">
-      <div class="upcoming-title">Coming days</div>
+      <div class="section-rule"><span class="upcoming-title">Coming days</span></div>
       ${futureHTML}
     </div>`;
 }
 
 function toggleDay(id) {
-  const el = document.getElementById(id);
-  el.classList.toggle('open');
+  document.getElementById(id).classList.toggle('open');
 }
 
-// ── data ──────────────────────────────────────────────────────
 async function loadTides() {
-  // check cache
   try {
     const raw = localStorage.getItem(CACHE_KEY);
     if (raw) {
       const { ts, data } = JSON.parse(raw);
       if (Date.now() - ts < CACHE_TTL) { render(data); return; }
     }
-  } catch(_) {}
+  } catch (_) {}
 
   try {
     const res = await fetch(API);
@@ -546,7 +549,7 @@ async function loadTides() {
     if (!json.extremes || !json.extremes.length) throw new Error('No tide data returned');
     localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), data: json.extremes }));
     render(json.extremes);
-  } catch(err) {
+  } catch (err) {
     document.getElementById('app').innerHTML = `
       <div class="status-box">
         <p class="error-msg">Could not load tide data.<br>${err.message}</p>
@@ -555,7 +558,6 @@ async function loadTides() {
   }
 }
 
-// ── SW ────────────────────────────────────────────────────────
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/exmouth-tides/sw.js', { scope: '/exmouth-tides/' }).catch(() => {});
 }
