@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Exmouth Tide Times</title>
+  <meta name="description" content="Tide times for Exmouth Dock, Devon" />
+  <meta name="theme-color" content="#063955" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Exmouth Tides" />
+
+  <link rel="manifest" href="/exmouth-tides/manifest.json" />
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --deep-sea: #063955;
+      --coral-red: #EF4A35;
+      --warm-cream: #FFF4D8;
+      --soft-cream: #FFF8EA;
+      --dark-navy: #032B42;
+      --wave-blue: #0a5a82;
+      --muted: #8aaaba;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--deep-sea);
+      color: var(--warm-cream);
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: var(--dark-navy);
+      padding: 1rem 1.25rem 0.875rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      border-bottom: 2px solid var(--coral-red);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    header img {
+      height: 40px;
+      width: auto;
+    }
+
+    .header-text h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      line-height: 1.1;
+      color: var(--warm-cream);
+      letter-spacing: 0.01em;
+    }
+
+    .header-text span {
+      font-size: 0.7rem;
+      font-weight: 400;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* ── MAIN ── */
+    main {
+      flex: 1;
+      padding: 0 0 2rem;
+    }
+
+    /* ── HERO TODAY ── */
+    .hero {
+      background: linear-gradient(160deg, var(--dark-navy) 0%, var(--deep-sea) 100%);
+      padding: 1.5rem 1.25rem 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0; right: 0;
+      height: 32px;
+      background: var(--deep-sea);
+      clip-path: ellipse(55% 100% at 50% 100%);
+    }
+
+    .hero-date {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+      color: var(--warm-cream);
+    }
+
+    .hero-location {
+      font-size: 0.72rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 1.25rem;
+    }
+
+    /* tide state pill */
+    .tide-state {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(239, 74, 53, 0.15);
+      border: 1px solid rgba(239, 74, 53, 0.4);
+      color: #ff8070;
+      border-radius: 2rem;
+      padding: 0.3rem 0.85rem;
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.03em;
+      margin-bottom: 1.5rem;
+    }
+
+    .tide-state.incoming {
+      background: rgba(10, 90, 130, 0.25);
+      border-color: rgba(100, 180, 220, 0.4);
+      color: #7fd0f0;
+    }
+
+    .tide-state svg {
+      width: 14px; height: 14px;
+      fill: currentColor;
+    }
+
+    /* today tide cards grid */
+    .tide-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .tide-card {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 1rem 1rem 0.875rem;
+      position: relative;
+      transition: transform 0.15s;
+    }
+
+    .tide-card.next-tide {
+      border-color: rgba(239, 74, 53, 0.5);
+      background: rgba(239, 74, 53, 0.08);
+    }
+
+    .tide-card .badge {
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--coral-red);
+      margin-bottom: 0.4rem;
+    }
+
+    .tide-card.next-tide .badge { color: #ff8070; }
+
+    .tide-card .type {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--warm-cream);
+      margin-bottom: 0.2rem;
+    }
+
+    .tide-card .time {
+      font-size: 1.55rem;
+      font-weight: 600;
+      color: var(--warm-cream);
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin-bottom: 0.3rem;
+    }
+
+    .tide-card .height {
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-weight: 400;
+    }
+
+    .tide-card .height strong {
+      color: var(--warm-cream);
+      font-weight: 600;
+    }
+
+    /* ── UPCOMING SECTION ── */
+    .upcoming {
+      padding: 1.75rem 1.25rem 0;
+    }
+
+    .upcoming-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--warm-cream);
+      margin-bottom: 1rem;
+      opacity: 0.85;
+    }
+
+    /* accordion day */
+    .day-accordion {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      margin-bottom: 0.625rem;
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+
+    .day-accordion.open {
+      border-color: rgba(255, 255, 255, 0.18);
+    }
+
+    .day-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.9rem 1.1rem;
+      cursor: pointer;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .day-header:active { opacity: 0.75; }
+
+    .day-header-left { display: flex; flex-direction: column; gap: 0.15rem; }
+
+    .day-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--warm-cream);
+    }
+
+    .day-range {
+      font-size: 0.7rem;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+
+    .day-chevron {
+      width: 20px; height: 20px;
+      color: var(--muted);
+      transition: transform 0.25s;
+      flex-shrink: 0;
+    }
+
+    .day-accordion.open .day-chevron { transform: rotate(180deg); }
+
+    .day-body {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows 0.28s ease;
+    }
+
+    .day-accordion.open .day-body { grid-template-rows: 1fr; }
+
+    .day-body-inner {
+      overflow: hidden;
+      padding: 0 1rem;
+    }
+
+    .day-accordion.open .day-body-inner { padding-bottom: 1rem; }
+
+    .day-tides {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+      gap: 0.6rem;
+    }
+
+    .mini-tide {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      padding: 0.65rem 0.75rem;
+    }
+
+    .mini-tide .type {
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--coral-red);
+      margin-bottom: 0.2rem;
+    }
+
+    .mini-tide .time {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--warm-cream);
+      letter-spacing: -0.01em;
+    }
+
+    .mini-tide .height {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-top: 0.15rem;
+    }
+
+    /* ── LOADING / ERROR ── */
+    .status-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      padding: 3rem 1.25rem;
+      text-align: center;
+    }
+
+    .spinner {
+      width: 36px; height: 36px;
+      border: 3px solid rgba(255,255,255,0.1);
+      border-top-color: var(--coral-red);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .status-box p {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .error-msg {
+      color: #ff8070;
+      font-size: 0.85rem;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 1.25rem;
+      font-size: 0.68rem;
+      color: var(--muted);
+      opacity: 0.6;
+      letter-spacing: 0.04em;
+    }
+
+    /* ── REFRESH BTN ── */
+    .refresh-btn {
+      background: none;
+      border: 1px solid rgba(255,255,255,0.15);
+      color: var(--muted);
+      border-radius: 6px;
+      padding: 0.4rem 0.9rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.75rem;
+      cursor: pointer;
+      margin-top: 0.5rem;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .refresh-btn:hover { border-color: var(--coral-red); color: var(--warm-cream); }
+  </style>
+</head>
+<body>
+
+<header>
+  <img src="logo.png" alt="Exmouth Tides logo" />
+  <div class="header-text">
+    <h1>Exmouth Tide Times</h1>
+    <span>Exmouth Dock &bull; Devon</span>
+  </div>
+</header>
+
+<main id="app">
+  <div class="status-box" id="loading">
+    <div class="spinner"></div>
+    <p>Fetching today's tides&hellip;</p>
+  </div>
+</main>
+
+<footer>Data: WorldTides &bull; Datum: LAT &bull; Exmouth Dock 50.6167°N 3.4167°W</footer>
+
+<script>
+const API = 'https://www.worldtides.info/api/v3?extremes&lat=50.6167&lon=-3.4167&date=today&days=4&datum=LAT&key=4a299365-ad1c-4f3f-b519-000c72f1b648';
+const CACHE_KEY = 'et-tides';
+const CACHE_TTL = 12 * 60 * 60 * 1000;
+
+// ── helpers ──────────────────────────────────────────────────
+function fmt(unixSec, opts) {
+  return new Date(unixSec * 1000).toLocaleTimeString('en-GB', opts || { hour: '2-digit', minute: '2-digit', hour12: false });
+}
+
+function fmtDate(unixSec) {
+  return new Date(unixSec * 1000).toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' });
+}
+
+function fmtShortDate(unixSec) {
+  return new Date(unixSec * 1000).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+}
+
+function dayKey(unixSec) {
+  const d = new Date(unixSec * 1000);
+  return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+}
+
+function todayKey() {
+  const d = new Date();
+  return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+}
+
+function h(m) { return `${parseFloat(m).toFixed(2)}m`; }
+
+// ── tide state ────────────────────────────────────────────────
+function getTideState(extremes) {
+  const now = Date.now() / 1000;
+  let prev = null, next = null;
+  for (const e of extremes) {
+    if (e.dt <= now) prev = e;
+    else if (!next) next = e;
+  }
+  if (!prev || !next) return null;
+  const rising = next.type === 'High';
+  return { rising, prev, next };
+}
+
+// ── render ────────────────────────────────────────────────────
+function render(extremes) {
+  const today = todayKey();
+  const grouped = {};
+  for (const e of extremes) {
+    const k = dayKey(e.dt);
+    if (!grouped[k]) grouped[k] = [];
+    grouped[k].push(e);
+  }
+
+  const keys = Object.keys(grouped);
+  const todayTides = grouped[today] || [];
+  const futureDays = keys.filter(k => k !== today);
+
+  const state = getTideState(extremes);
+  const now = Date.now() / 1000;
+
+  // next tide from now
+  const nextTide = extremes.find(e => e.dt > now);
+
+  let statePill = '';
+  if (state) {
+    const arrow = state.rising
+      ? `<svg viewBox="0 0 24 24"><path d="M4 20l16-8L4 4v6l8 2-8 2v6z"/></svg>`
+      : `<svg viewBox="0 0 24 24"><path d="M20 4L4 12l16 8v-6l-8-2 8-2V4z"/></svg>`;
+    const label = state.rising ? 'Tide coming in' : 'Tide going out';
+    statePill = `<div class="tide-state ${state.rising ? 'incoming' : ''}">${arrow}${label}</div>`;
+  }
+
+  const todayCards = todayTides.map(e => {
+    const isNext = nextTide && e.dt === nextTide.dt;
+    return `
+      <div class="tide-card ${isNext ? 'next-tide' : ''}">
+        ${isNext ? '<div class="badge">&#9654; Next</div>' : '<div class="badge">&nbsp;</div>'}
+        <div class="type">${e.type === 'High' ? 'High Tide' : 'Low Tide'}</div>
+        <div class="time">${fmt(e.dt)}</div>
+        <div class="height">Height: <strong>${h(e.height)}</strong></div>
+      </div>`;
+  }).join('');
+
+  const futureHTML = futureDays.slice(0, 3).map((k, i) => {
+    const day = grouped[k];
+    const dt0 = day[0].dt;
+    const miniCards = day.map(e => `
+      <div class="mini-tide">
+        <div class="type">${e.type === 'High' ? 'High' : 'Low'}</div>
+        <div class="time">${fmt(e.dt)}</div>
+        <div class="height">${h(e.height)}</div>
+      </div>`).join('');
+
+    const dtLast = day[day.length - 1].dt;
+    const rangeStr = `${fmtShortDate(dt0)}`;
+
+    return `
+      <div class="day-accordion" id="day-${i}">
+        <div class="day-header" onclick="toggleDay('day-${i}')">
+          <div class="day-header-left">
+            <span class="day-name">${new Date(dt0*1000).toLocaleDateString('en-GB',{weekday:'long'})}</span>
+            <span class="day-range">${rangeStr}</span>
+          </div>
+          <svg class="day-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </div>
+        <div class="day-body">
+          <div class="day-body-inner">
+            <div class="day-tides">${miniCards}</div>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+
+  document.getElementById('app').innerHTML = `
+    <div class="hero">
+      <div class="hero-date">${new Date().toLocaleDateString('en-GB',{weekday:'long', day:'numeric', month:'long'})}</div>
+      <div class="hero-location">Exmouth Dock &bull; Devon</div>
+      ${statePill}
+      <div class="tide-grid">${todayCards || '<p style="color:var(--muted);font-size:.85rem">No tides found for today.</p>'}</div>
+    </div>
+    <div class="upcoming">
+      <div class="upcoming-title">Coming days</div>
+      ${futureHTML}
+    </div>`;
+}
+
+function toggleDay(id) {
+  const el = document.getElementById(id);
+  el.classList.toggle('open');
+}
+
+// ── data ──────────────────────────────────────────────────────
+async function loadTides() {
+  // check cache
+  try {
+    const raw = localStorage.getItem(CACHE_KEY);
+    if (raw) {
+      const { ts, data } = JSON.parse(raw);
+      if (Date.now() - ts < CACHE_TTL) { render(data); return; }
+    }
+  } catch(_) {}
+
+  try {
+    const res = await fetch(API);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const json = await res.json();
+    if (!json.extremes || !json.extremes.length) throw new Error('No tide data returned');
+    localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), data: json.extremes }));
+    render(json.extremes);
+  } catch(err) {
+    document.getElementById('app').innerHTML = `
+      <div class="status-box">
+        <p class="error-msg">Could not load tide data.<br>${err.message}</p>
+        <button class="refresh-btn" onclick="location.reload()">Try again</button>
+      </div>`;
+  }
+}
+
+// ── SW ────────────────────────────────────────────────────────
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/exmouth-tides/sw.js', { scope: '/exmouth-tides/' }).catch(() => {});
+}
+
+loadTides();
+</script>
+</body>
+</html>
