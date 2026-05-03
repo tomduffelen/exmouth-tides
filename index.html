@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Exmouth Tide Times</title>
   <meta name="description" content="Tide times for Exmouth Dock, Devon" />
-  <meta name="theme-color" content="#063955" />
+  <meta name="theme-color" content="#FDFAF2" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content="Exmouth Tides" />
 
   <link rel="manifest" href="/exmouth-tides/manifest.json" />
@@ -37,13 +37,6 @@
     body {
       font-family: 'DM Sans', sans-serif;
       background-color: var(--soft-cream);
-      background-image: repeating-linear-gradient(
-        -45deg,
-        transparent,
-        transparent 28px,
-        rgba(6, 57, 85, 0.022) 28px,
-        rgba(6, 57, 85, 0.022) 29px
-      );
       color: var(--deep-sea);
       min-height: 100dvh;
       display: flex;
@@ -52,58 +45,62 @@
 
     /* ── HEADER ── */
     header {
-      background: var(--dark-navy);
-      padding: 0.875rem 1.25rem;
+      background: var(--soft-cream);
+      padding: 1rem 1.5rem;
       display: flex;
       align-items: center;
-      gap: 0.75rem;
+      gap: 1rem;
       border-bottom: 3px solid var(--coral-red);
       position: sticky;
       top: 0;
       z-index: 100;
     }
 
-    header img { height: 38px; width: auto; }
+    header img { height: 80px; width: auto; }
 
     .header-text h1 {
       font-family: 'Playfair Display', serif;
-      font-size: 1.15rem;
+      font-size: 1.8rem;
       font-weight: 700;
-      line-height: 1.1;
-      color: var(--warm-cream);
-      letter-spacing: 0.01em;
+      line-height: 1.15;
+      color: var(--deep-sea);
     }
 
     .header-text span {
-      font-size: 0.68rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.78rem;
       font-weight: 400;
-      color: rgba(255, 255, 255, 0.4);
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+      display: block;
+      margin-top: 0.1rem;
+    }
+
+    /* ── BEACH HUT STRIPE BAND ── */
+    .beach-band {
+      height: 12px;
+      flex-shrink: 0;
+      background: repeating-linear-gradient(
+        -45deg,
+        var(--coral-red) 0,
+        var(--coral-red) 6px,
+        var(--soft-cream) 6px,
+        var(--soft-cream) 12px
+      );
+      opacity: 0.65;
     }
 
     /* ── MAIN ── */
     main { flex: 1; padding-bottom: 2.5rem; }
 
     /* ── HERO ── */
-    .hero {
-      background: var(--warm-cream);
-      border-bottom: 1px solid rgba(6, 57, 85, 0.1);
-      padding-bottom: 1.75rem;
-    }
+    .hero { padding-bottom: 1.75rem; }
 
-    /* Beach-hut stripe bar */
-    .hero-stripe {
-      height: 9px;
-      background: repeating-linear-gradient(
-        90deg,
-        var(--coral-red) 0, var(--coral-red) 22px,
-        var(--dark-navy) 22px, var(--dark-navy) 44px
-      );
-      margin-bottom: 1.5rem;
+    .hero-inner {
+      padding: 1.5rem 1.25rem 0;
+      max-width: 1100px;
+      margin: 0 auto;
     }
-
-    .hero-inner { padding: 0 1.25rem; }
 
     .hero-date {
       font-family: 'Playfair Display', serif;
@@ -121,68 +118,75 @@
       margin-bottom: 1.1rem;
     }
 
-    /* tide state pill */
+    /* ── TIDE STATE PILL ── */
     .tide-state {
       display: inline-flex;
       align-items: center;
       gap: 0.4rem;
-      background: rgba(6, 57, 85, 0.07);
-      border: 1px solid rgba(6, 57, 85, 0.18);
-      color: var(--deep-sea);
+      background: var(--coral-red);
+      color: var(--soft-cream);
       border-radius: 2rem;
-      padding: 0.3rem 0.85rem;
-      font-size: 0.76rem;
+      padding: 0.35rem 1rem;
+      font-size: 0.78rem;
       font-weight: 500;
       letter-spacing: 0.03em;
       margin-bottom: 1.25rem;
     }
 
-    .tide-state.incoming {
-      background: rgba(10, 90, 130, 0.08);
-      border-color: rgba(10, 90, 130, 0.25);
-      color: #0a5a82;
-    }
-
+    .tide-state.incoming { background: var(--coral-red); }
     .tide-state svg { width: 13px; height: 13px; fill: currentColor; }
 
-    /* ── TIDE GRID — full-width vertical list ── */
+    /* ── TIDE GRID ── */
     .tide-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 0.6rem;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
     }
 
-    /* tide row card */
+    @media (min-width: 560px) {
+      .tide-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (min-width: 900px) {
+      .tide-grid { grid-template-columns: repeat(4, 1fr); }
+    }
+
+    /* ── TIDE CARD ── */
     .tide-card {
       display: flex;
       align-items: center;
       justify-content: space-between;
       background: #fff;
       border: 1px solid var(--border);
-      border-left: 5px solid rgba(6, 57, 85, 0.2);
-      border-radius: 0 10px 10px 0;
-      padding: 0.8rem 1.1rem 0.8rem 1rem;
+      border-left: 4px solid rgba(6, 57, 85, 0.15);
+      border-radius: 12px;
+      padding: 1.25rem 1.25rem 1.25rem 1rem;
+      box-shadow: 0 2px 10px rgba(6, 57, 85, 0.07);
     }
 
-    .tide-card.next-tide {
-      border-left-color: var(--coral-red);
-      background: #fffbfa;
-    }
+    .tide-card.next-tide { border-left-color: var(--coral-red); }
 
-    .card-left { display: flex; flex-direction: column; gap: 0.1rem; }
+    .card-left { display: flex; flex-direction: column; gap: 0.3rem; }
 
+    /* NEXT TIDE pill badge */
     .card-badge {
-      font-size: 0.57rem;
+      display: inline-block;
+      align-self: flex-start;
+      font-size: 0.56rem;
       font-weight: 700;
-      letter-spacing: 0.15em;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
-      color: var(--coral-red);
-      min-height: 1em;
+      color: #fff;
+      background: var(--coral-red);
+      border-radius: 2rem;
+      padding: 0.2rem 0.65rem;
     }
+
+    .card-badge:empty { display: none; }
 
     .card-type {
       font-family: 'Playfair Display', serif;
-      font-size: 1rem;
+      font-size: 1.05rem;
       font-weight: 600;
       color: var(--deep-sea);
       line-height: 1.2;
@@ -192,16 +196,16 @@
       font-size: 0.66rem;
       color: var(--muted);
       letter-spacing: 0.04em;
-      margin-top: 0.15rem;
     }
 
     .card-right { text-align: right; flex-shrink: 0; }
 
     .card-time {
+      font-family: 'Playfair Display', serif;
       font-size: 1.85rem;
       font-weight: 700;
       color: var(--deep-sea);
-      letter-spacing: -0.03em;
+      letter-spacing: -0.02em;
       line-height: 1;
     }
 
@@ -213,7 +217,11 @@
     }
 
     /* ── UPCOMING SECTION ── */
-    .upcoming { padding: 1.75rem 1.25rem 0; }
+    .upcoming {
+      padding: 1.75rem 1.25rem 0;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
 
     .section-rule {
       display: flex;
@@ -240,7 +248,7 @@
 
     /* ── ACCORDION ── */
     .day-accordion {
-      background: #fff;
+      background: var(--soft-cream);
       border: 1px solid var(--border);
       border-radius: 10px;
       margin-bottom: 0.5rem;
@@ -277,7 +285,7 @@
 
     .day-chevron {
       width: 18px; height: 18px;
-      color: var(--muted);
+      color: var(--coral-red);
       transition: transform 0.25s;
       flex-shrink: 0;
     }
@@ -292,38 +300,47 @@
 
     .day-accordion.open .day-body { grid-template-rows: 1fr; }
     .day-body-inner { overflow: hidden; }
-    .day-body-pad { padding: 0 1rem 1rem; }
+    .day-body-pad { padding: 0 1.1rem 1rem; }
 
-    .day-tides {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-      gap: 0.5rem;
-    }
+    /* ── ACCORDION TIDE LIST ── */
+    .day-tides { display: flex; flex-direction: column; }
 
     .mini-tide {
-      background: var(--soft-cream);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 0.6rem 0.7rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.55rem 0;
+      border-bottom: 1px solid var(--border);
     }
 
+    .mini-tide:last-child { border-bottom: none; }
+
     .mini-type {
-      font-size: 0.6rem;
-      font-weight: 700;
-      letter-spacing: 0.12em;
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
       color: var(--coral-red);
-      margin-bottom: 0.2rem;
+      width: 30px;
+      flex-shrink: 0;
     }
 
     .mini-time {
-      font-size: 1.05rem;
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
       font-weight: 600;
       color: var(--deep-sea);
-      letter-spacing: -0.01em;
+      flex: 1;
     }
 
-    .mini-ht { font-size: 0.68rem; color: var(--muted); margin-top: 0.1rem; }
+    .mini-label {
+      font-size: 0.72rem;
+      color: var(--deep-sea);
+      opacity: 0.6;
+      flex: 1;
+    }
+
+    .mini-ht { font-size: 0.7rem; color: var(--muted); }
 
     /* ── LOADING / ERROR ── */
     .status-box {
@@ -384,6 +401,8 @@
     <span>Exmouth Dock &bull; Devon</span>
   </div>
 </header>
+
+<div class="beach-band" aria-hidden="true"></div>
 
 <main id="app">
   <div class="status-box">
@@ -485,9 +504,9 @@ function render(extremes) {
     const dt0 = day[0].dt;
     const miniCards = day.map(e => `
       <div class="mini-tide">
-        <div class="mini-type">${e.type === 'High' ? 'High' : 'Low'}</div>
-        <div class="mini-time">${fmt(e.dt)}</div>
-        <div class="mini-ht">${ht(e.height)}</div>
+        <span class="mini-type">${e.type === 'High' ? 'High' : 'Low'}</span>
+        <span class="mini-time">${fmt(e.dt)}</span>
+        <span class="mini-ht">${ht(e.height)}</span>
       </div>`).join('');
     return `
       <div class="day-accordion" id="day-${i}">
@@ -512,7 +531,6 @@ function render(extremes) {
 
   document.getElementById('app').innerHTML = `
     <div class="hero">
-      <div class="hero-stripe"></div>
       <div class="hero-inner">
         <div class="hero-date">${new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' })}</div>
         <div class="hero-location">Exmouth Dock &bull; Devon</div>
